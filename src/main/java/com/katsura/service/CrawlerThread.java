@@ -50,6 +50,12 @@ public class CrawlerThread implements Runnable {
         }
     }
 
+    /**
+     * 通过url拿到html
+     * @param webPage
+     * @return
+     * @throws IOException
+     */
     private boolean fetchHtml(WebPage webPage) throws IOException {
         Connection.Response response = Jsoup.connect(webPage.getUrl()).timeout(3000).execute();
         webPage.setHtml(response.body());
@@ -80,6 +86,7 @@ public class CrawlerThread implements Runnable {
     }
 
     private Long getCommentCount(String id) throws Exception {
+        //声称AES密钥需要随机，否则服务器会dump掉相同密钥的请求
         String secKey = new BigInteger(100, new SecureRandom()).toString(32).substring(0, 16);
         String encText = aesEncrypt(aesEncrypt(text, "0CoJUm6Qyw8W8jud"), secKey);
         String encSecKey = rsaEncrypt(secKey);
